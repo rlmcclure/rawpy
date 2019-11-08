@@ -29,6 +29,9 @@ raw4TestPath = os.path.join(os.path.dirname(__file__), 'RAW_SIGMA_SD9_SRGB.X3F')
 # Canon 40D in sRAW format with 4 channels
 raw5TestPath = os.path.join(os.path.dirname(__file__), 'RAW_CANON_40D_SRAW_V103.CR2')
 
+# Kodak DC50 with special characters in filename
+raw6TestPath = os.path.join(os.path.dirname(__file__), 'RAW_KODAK_DC50_עִבְרִ.KDC')
+
 def testVersion():
     print('using libraw', rawpy.libraw_version)
     pprint(rawpy.flags)
@@ -85,6 +88,9 @@ def testSRawFileOpenAndPostProcess():
     assert_array_equal(rgb.shape, [1296, 1944, 3])
     print_stats(rgb)
     save('test_sraw.tiff', rgb)
+
+def testFileOpenWithNonAsciiCharacters():
+    raw = rawpy.imread(raw5TestPath)
 
 def testBufferOpen():
     with open(rawTestPath, 'rb') as rawfile:
