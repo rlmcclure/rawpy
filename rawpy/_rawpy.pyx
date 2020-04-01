@@ -170,7 +170,7 @@ cdef extern from "libraw.h":
 #         unsigned int                progress_flags
 #         unsigned int                process_warnings
         libraw_colordata_t          color
-        libraw_imgother_t           other
+        libraw_imgother_t           params
 #         libraw_thumbnail_t          thumbnail
         libraw_rawdata_t            rawdata
 #         void                *parent_class
