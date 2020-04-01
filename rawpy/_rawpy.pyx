@@ -7,6 +7,7 @@ from __future__ import print_function
 from cpython.ref cimport PyObject, Py_INCREF
 from cpython.bytes cimport PyBytes_FromStringAndSize
 from cython.operator cimport dereference as deref
+from posix.types cimport time_t
 
 import numpy as np
 from collections import namedtuple
@@ -74,11 +75,30 @@ cdef extern from "libraw.h":
         void        *profile # a string?
         unsigned    profile_length
 
+# rlmcclure additon
+    ctypedef struct libraw_imgother_t:
+        float       iso_speed 
+        float       shutter
+        float       aperture
+        float       focal_len
+
+        time_t      timestamp
+
+        unsigned    shot_order
+        unsigned    gpsdata[32]
+
+        char        desc[512]
+        char        artist[64]
+        float       FlashEC
+# additon end
+
     ctypedef struct libraw_rawdata_t:
         ushort *raw_image # 1 component per pixel, for b/w and Bayer type sensors
         ushort (*color4_image)[4] # 4 components per pixel, the 4th component can be void
         ushort (*color3_image)[3] # 3 components per pixel, sRAW/mRAW files, RawSpeed decoding
         libraw_colordata_t          color
+        libraw_imgother_t           other
+
         
     ctypedef struct libraw_output_params_t:
         unsigned    greybox[4]     # -A  x1 y1 x2 y2 
@@ -170,15 +190,15 @@ cdef extern from "libraw.h":
 #         unsigned int                progress_flags
 #         unsigned int                process_warnings
         libraw_colordata_t          color
-#         libraw_imgother_t           other
+        libraw_imgother_t           other
 # rlmcclure additon
 #         libraw_imgother_t           params
 #or
-#         libraw_imgother_t           iso_speed
-#         libraw_imgother_t           shutter
-#         libraw_imgother_t           aperture
-#         libraw_imgother_t           timestamp
-#         libraw_imgother_t           shot_order
+#         libraw_imgother_t          iso_speed
+#         libraw_imgother_t          shutter
+#         libraw_imgother_t          aperture
+#         libraw_imgother_t          timestamp
+#         libraw_imgother_t          shot_order
 # addition end
 #         libraw_thumbnail_t          thumbnail
         libraw_rawdata_t            rawdata
@@ -646,19 +666,19 @@ cdef class RawPy:
                     self.p.imgdata.rawdata.color.cam_mul[2],
                     self.p.imgdata.rawdata.color.cam_mul[3]]
     #rlmcclure additon
-    #property image_info:
-    #    """
-    #    Read image info from file.
-    #    
-    #    :rtype: ?
-    #    """
-    #    def __get__(self):
-    #        self.ensure_unpack()
-    #  return [self.p.imgdata.iso_speed,
-#              self.p.imgdata.shutter,
-#              self.p.imgdata.aperture,
-#              self.p.imgdata.timestamp,
-#              self.p.imgdata.shot_order,]
+    property image_info:
+        """
+        Read image info from file.
+        
+        :rtype: ?
+        """
+        def __get__(self):
+            self.ensure_unpack()
+            return [self.p.imgdata.rawdata.other.iso_speed,
+                    self.p.imgdata.rawdata.other.shutter,
+                    self.p.imgdata.rawdata.other.aperture,
+                    self.p.imgdata.rawdata.other.timestamp,
+                    self.p.imgdata.rawdata.other.shot_order]
     #end addition
 
     property daylight_whitebalance:
