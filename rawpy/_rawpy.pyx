@@ -171,6 +171,15 @@ cdef extern from "libraw.h":
 #         unsigned int                process_warnings
         libraw_colordata_t          color
 #         libraw_imgother_t           other
+# rlmcclure additon
+#         libraw_imgother_t           params
+#or
+#         libraw_imgother_t           iso_speed
+#         libraw_imgother_t           shutter
+#         libraw_imgother_t           aperture
+#         libraw_imgother_t           timestamp
+#         libraw_imgother_t           shot_order
+# addition end
 #         libraw_thumbnail_t          thumbnail
         libraw_rawdata_t            rawdata
 #         void                *parent_class
@@ -645,7 +654,11 @@ cdef class RawPy:
     #    """
     #    def __get__(self):
     #        self.ensure_unpack()
-    #  return self.p.imgdata.rawdata.other
+    #  return [self.p.imgdata.iso_speed,
+#              self.p.imgdata.shutter,
+#              self.p.imgdata.aperture,
+#              self.p.imgdata.timestamp,
+#              self.p.imgdata.shot_order,]
     #end addition
 
     property daylight_whitebalance:
