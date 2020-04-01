@@ -170,7 +170,7 @@ cdef extern from "libraw.h":
 #         unsigned int                progress_flags
 #         unsigned int                process_warnings
         libraw_colordata_t          color
-        libraw_imgother_t           params
+#         libraw_imgother_t           other
 #         libraw_thumbnail_t          thumbnail
         libraw_rawdata_t            rawdata
 #         void                *parent_class
@@ -637,15 +637,15 @@ cdef class RawPy:
                     self.p.imgdata.rawdata.color.cam_mul[2],
                     self.p.imgdata.rawdata.color.cam_mul[3]]
     #rlmcclure additon
-    property image_info:
-        """
-        Read image info from file.
-        
-        :rtype: ?
-        """
-        def __get__(self):
-            self.ensure_unpack()
-            return self.p.imgdata.rawdata.other
+    #property image_info:
+    #    """
+    #    Read image info from file.
+    #    
+    #    :rtype: ?
+    #    """
+    #    def __get__(self):
+    #        self.ensure_unpack()
+    #  return self.p.imgdata.rawdata.other
     #end addition
 
     property daylight_whitebalance:
